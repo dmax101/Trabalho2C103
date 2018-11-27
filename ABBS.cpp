@@ -210,7 +210,8 @@ bool ehEstritamenteBinaria(arvore* arv)
 {
 	if(arv == NULL)
 	{
-		cout << "Erro" << endl;
+		cout << "Erro, arvore inexistente" << endl;
+		return false;
 	}
 	else if(arv->esq == NULL && arv->dir == NULL)
 	{
@@ -225,14 +226,46 @@ bool ehEstritamenteBinaria(arvore* arv)
 		return false;
 	}
 } //: retorna um booleano indicando se a árvore é estritamente binária.
-// ehQuaseCompleta()
-// {
-//
-// } //: retorna um booleano indicando se a árvore é quase completa.
-// ehCompletaCheia()
-// {
-//
-// } //: retorna um booleano indicando se a árvore é completa (cheia).
+bool ehQuaseCompleta(arvore* arv) // Parametro adicional valor
+{
+	if(arv == NULL)
+	{
+		cout << "Erro, arvore inexistente" << endl;
+		return false;
+	}
+	else if(arv->esq != NULL && arv->dir != NULL)
+	{	
+		return (ehQuaseCompleta(arv->esq) && ehQuaseCompleta(arv->dir)) && ();
+	}
+	else if(arv->esq == NULL && arv->dir == NULL)
+	{
+		return true;
+	}
+	else
+	{
+		if(arv->esq->esq )
+	}
+} //: retorna um booleano indicando se a árvore é quase completa.
+bool ehCompletaCheia(arvore* arv)
+{
+	if(arv == NULL)
+	{
+		cout << "Erro, arvore inexistente" << endl;
+		return false;
+	}
+	else if(arv->esq != NULL && arv->dir != NULL)
+	{
+		return (ehCompletaCheia(arv->esq) && ehCompletaCheia(arv->dir));
+	}
+	else if(arv->esq == NULL && arv->dir == NULL)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+} //: retorna um booleano indicando se a árvore é completa (cheia).
 void preOrdem(arvore* arv)
 {
 	if(arv == NULL)
@@ -292,16 +325,21 @@ int main()
 	// remover(arv, "lorem");
 
 
-	arv = inserir(arv, "m");
-	arv = inserir(arv, "g");
-	arv = inserir(arv, "a");
-	arv = inserir(arv, "h");
-	arv = inserir(arv, "q");
-	arv = inserir(arv, "n");
-	arv = inserir(arv, "x");
-
+	arv = inserir(arv, "p");
+	arv = inserir(arv, "t");
+	arv = inserir(arv, "d");
+	arv = inserir(arv, "b");
+	// arv = inserir(arv, "a");
+	// arv = inserir(arv, "c");
+	arv = inserir(arv, "e");
+	// arv = inserir(arv, "e");
+	// arv = inserir(arv, "g");
+	arv = inserir(arv, "s");
+	arv = inserir(arv, "u");
 
 	cout << "Eh estritamente binaria? " << ehEstritamenteBinaria(arv) << endl;
+	cout << "Eh completa? " << ehCompletaCheia(arv) << endl;
+	// cout << "Eh quase completa " << ehEstritamenteBinaria(arv) << endl;
 	// posOrdem(arv);
 	emOrdem(arv);
 	cout << endl;
