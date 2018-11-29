@@ -73,6 +73,29 @@ int maiorIgual(string onde, string oQue)
 
 	return 2; // retorna 2 para caso de palavras iguais
 }
+
+void contador(arvore* arv, int& contadorFolhas, int& contadorNos)
+{
+	if(arv == NULL)
+	{
+		return;
+	}
+
+	// Incrementa os Nós
+
+	contadorNos++;
+
+	if(arv->dir == NULL && arv->esq == NULL)
+	{
+		// Incrementa Folhas
+
+		contadorFolhas++;
+	}
+
+	contador(arv->esq, contadorFolhas, contadorNos);
+	contador(arv->dir, contadorFolhas, contadorNos);
+}
+
 arvore* buscar(arvore* arv, string v)
 {
 	if(arv == NULL)
@@ -193,7 +216,7 @@ arvore* remover(arvore* arv, string v)
 		}
 	}
 	return arv;
-} //: remove um elemento da lista.
+} //: remove um elemento da arvore.
 bool estaVazia(arvore* arv) // Booleano para vazio ou nao
 {
 	if(arv == NULL)
@@ -228,23 +251,24 @@ bool ehEstritamenteBinaria(arvore* arv)
 } //: retorna um booleano indicando se a árvore é estritamente binária.
 bool ehQuaseCompleta(arvore* arv) // Parametro adicional valor
 {
-	if(arv == NULL)
+	int contagemFolhas = 0;
+	int contagemNos = 0;
+
+	contador(arv, contagemFolhas, contagemNos);
+
+	// Não Estrita.
+	if(contagemFolhas % 2 == 0 && 2 * contagemFolhas == contagemNos - 1)
 	{
-		cout << "Erro, arvore inexistente" << endl;
-		return false;
-	}
-	else if(arv->esq != NULL && arv->dir != NULL)
-	{	
-		return (ehQuaseCompleta(arv->esq) && ehQuaseCompleta(arv->dir)) && ();
-	}
-	else if(arv->esq == NULL && arv->dir == NULL)
-	{
+		// É quase completa
 		return true;
 	}
-	else
+	// Estritamente Binária
+	else if(contagemFolhas % 2 != 0 && 2 * contagemFolhas - 1 == contagemNos - 1)
 	{
-		if(arv->esq->esq )
+		// É quase completa
+		return true;
 	}
+	return false;
 } //: retorna um booleano indicando se a árvore é quase completa.
 bool ehCompletaCheia(arvore* arv)
 {
@@ -299,51 +323,169 @@ void posOrdem(arvore* arv)
 } //: visita e imprime os elementos da árvore em PÓS-ORDEM (“EDR”).
 
 
-int main()
+void menu()
 {
+	bool sair = false;
+	int opcao;
+	string valor;
+
+	cout << "--------------" << endl;
+	cout << "Uma arvore nula foi criada!" << endl;
+	cout << "--------------" << endl;
+
 	arvore* arv = NULL;
 
-	estaVazia(arv);
+	while(!sair)
+	{
+		cout << "--------------" << endl;
+		cout << "MENU" << endl;
+		cout << "1. Inserir novo elemento na arvore" << endl;
+		cout << "2. Remover elemento da arvore" << endl;
+		cout << "3. Verificar se um elemento esta na arvore" << endl;
+		cout << "4. Verificar se a arvore esta vazia" << endl;
+		cout << "5. Imprimir PreOrdem" << endl;
+		cout << "6. Imprimir EmOrdem" << endl;
+		cout << "7. Imprimir PosOrdem" << endl;
+		cout << "8. Eh estritamente binaria?" << endl;
+		cout << "9. Eh quase completa?" << endl;
+		cout << "10. Eh completa?" << endl;
+		cout << "0. Sair" << endl;
+		cout << "Entre com a opcao desejada: ";
+		cin >> opcao;
+		switch(opcao)
+		{
+		case 1:
+			// 1. Inserir novo elemento na arvore
+			cout << "Insira o valor do novo elemento: ";
+			cin >> valor;
+			arv = inserir(arv, valor);
+			break;
+		case 2:
+			// 2. Remover elemento da arvore
+			cout << "Insira o valor do elemento a ser removido: ";
+			cin >> valor;
+			arv = remover(arv, valor);
+			break;
+		case 3:
+			// 3. Verificar se um elemento está na arvore
+			cout << "Pesquisar elemento: ";
+			cin >> valor;
+			if(buscar(arv, valor))
+			{
+				cout << "--------------" << endl;
+				cout << "O elemento esta na arvore" << endl;
+				cout << "--------------" << endl;
+			}
+			else
+			{
+				cout << "--------------" << endl;
+				cout << "O elemento NAO esta na arvore" << endl;
+				cout << "--------------" << endl;
+			};
+			break;
+		case 4:
+			// 4. Verificar se a arvore está vazia
+			if(estaVazia(arv))
+			{
+				cout << "--------------" << endl;
+				cout << "A arvore esta vazia" << endl;
+				cout << "--------------" << endl;
+			}
+			else
+			{
+				cout << "--------------" << endl;
+				cout << "A arvore NAO esta vazia" << endl;
+				cout << "--------------" << endl;
+			};
+			break;
+		case 5:
+			// 5. visita e imprime os elementos da árvore em PRÉ-ORDEM (“RED”).
+			cout << "--------------" << endl;
+			cout << "Imprimindo em PRE-Ordem" << endl;
+			cout << "--------------" << endl;
+			preOrdem(arv);
+			break;
+		case 6:
+			// 6.  visita e imprime os elementos da árvore EM-ORDEM (“ERD”).
+			cout << "--------------" << endl;
+			cout << "Imprimindo em EM-Ordem" << endl;
+			cout << "--------------" << endl;
+			emOrdem(arv);
+			break;
+		case 7:
+			// 7.  visita e imprime os elementos da árvore PÓS-ORDEM (“EDR”).
+			cout << "--------------" << endl;
+			cout << "Imprimindo em POS-Ordem" << endl;
+			cout << "--------------" << endl;
+			posOrdem(arv);
+			break;
+		case 8:
+			// 8. Verificar se a arvore é estritamente binária
+			if(ehEstritamenteBinaria(arv))
+			{
+				cout << "--------------" << endl;
+				cout << "A arvore eh estritamente binária" << endl;
+				cout << "--------------" << endl;
+			}
+			else
+			{
+				cout << "--------------" << endl;
+				cout << "A arvore NAO eh estritamente binária" << endl;
+				cout << "--------------" << endl;
+			};
+			break;
+		case 9:
+			// 9. Verificar se a arvore é quase completa
+			if(ehQuaseCompleta(arv))
+			{
+				cout << "--------------" << endl;
+				cout << "A arvore eh quase completa" << endl;
+				cout << "--------------" << endl;
+			}
+			else
+			{
+				cout << "--------------" << endl;
+				cout << "A arvore NAO eh quase completa" << endl;
+				cout << "--------------" << endl;
+			};
+			break;
+		case 10:
+			// 10. Verificar se a arvore é completa
+			if(ehCompletaCheia(arv))
+			{
+				cout << "--------------" << endl;
+				cout << "A arvore eh completa" << endl;
+				cout << "--------------" << endl;
+			}
+			else
+			{
+				cout << "--------------" << endl;
+				cout << "A arvore NAO eh completa" << endl;
+				cout << "--------------" << endl;
+			};
+			break;
+		case 0:
+			cout << "--------------" << endl;
+			cout << "Tchau!" << endl;
+			cout << "--------------" << endl;
+			sair = true;
+			// 0. Sair
+			break;
+		default:
+			// Opcao invalida
+			cout << "--------------" << endl;
+			cout << "Opcao invalida!" << endl;
+			cout << "--------------" << endl;
 
-	// arv = inserir(arv, "lorem");
-	// arv = inserir(arv, "ipsum");
-	// arv = inserir(arv, "dolor" );
-	// arv = inserir(arv, "sit");
-	// arv = inserir(arv, "amet");
-	// arv = inserir(arv, "consectetur");
-	// arv = inserir(arv, "adipiscing");
-	// arv = inserir(arv, "elit");
-	// arv = inserir(arv, "valinor");
+			break;
+		}
+	}
+}
 
 
-	// emOrdem(arv);
-//
-	// buscar(arv, "amet");
-//
-	// buscar(arv, "Danilo");
-//
-	// remover(arv, "lorem");
-
-
-	arv = inserir(arv, "p");
-	arv = inserir(arv, "t");
-	arv = inserir(arv, "d");
-	arv = inserir(arv, "b");
-	// arv = inserir(arv, "a");
-	// arv = inserir(arv, "c");
-	arv = inserir(arv, "e");
-	// arv = inserir(arv, "e");
-	// arv = inserir(arv, "g");
-	arv = inserir(arv, "s");
-	arv = inserir(arv, "u");
-
-	cout << "Eh estritamente binaria? " << ehEstritamenteBinaria(arv) << endl;
-	cout << "Eh completa? " << ehCompletaCheia(arv) << endl;
-	// cout << "Eh quase completa " << ehEstritamenteBinaria(arv) << endl;
-	// posOrdem(arv);
-	emOrdem(arv);
-	cout << endl;
-
-
+int main()
+{
+	menu();
+	
 	return 0;
 }
